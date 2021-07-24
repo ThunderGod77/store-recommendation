@@ -96,8 +96,34 @@ func WishlistP(cId, pId, date string) error {
 		result, err := transaction.Run(
 			"MATCH (c:Customer{internal_id:$cId}),(p:Product{internal_id:$pId}) "+
 				"MERGE (c)-[:Wishlist{date:$date}]->(p) "+
-				"MATCH (c)-[r:View]->(p) " +
+				"MATCH (c)-[r:View]->(p) "+
 				"DELETE r",
+
+			map[string]interface{}{"cId": cId, "pId": pId, "date": date})
+
+		if err != nil {
+			return nil, err
+		}
+		return nil, result.Err()
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func OrderP(cId, pId, date string) error {
+	session := global.Driver.NewSession(neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
+	defer session.Close()
+
+	_, err := session.WriteTransaction(func(transaction neo4j.Transaction) (interface{}, error) {
+		result, err := transaction.Run(
+			"MATCH (c:Customer{internal_id:$cId}),(p:Product{internal_id:$pId}) "+
+				"MERGE (c)-[:Order{date:$date}]->(p) "+
+				"PARTIAL MATCH (c)-[r:View]->(p),(c)-[o:Wishlist]->(p) "+
+				"DELETE r , p",
 
 			map[string]interface{}{"cId": cId, "pId": pId, "date": date})
 
