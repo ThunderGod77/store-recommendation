@@ -14,3 +14,25 @@ func Init() {
 	}
 
 }
+
+func DeleteAll()error{
+	session := global.Driver.NewSession(neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
+	defer session.Close()
+
+	_, err := session.WriteTransaction(func(transaction neo4j.Transaction) (interface{}, error) {
+		result, err := transaction.Run(
+			"MATCH (n) DETACH DELETE n",
+			map[string]interface{}{})
+		if err != nil {
+			return nil, err
+		}
+		return nil, result.Err()
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}

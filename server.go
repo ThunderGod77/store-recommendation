@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"github.com/gorilla/mux"
+	"graphApp/controllers/data"
 	"graphApp/db"
 	"graphApp/global"
 	"graphApp/routes"
@@ -30,6 +31,7 @@ func main() {
 			log.Println(err)
 		}
 	})
+	a.HandleFunc("/load-data", data.LoadTestData)
 
 	p := a.PathPrefix("/product").Subrouter()
 	c := a.PathPrefix("/customer").Subrouter()

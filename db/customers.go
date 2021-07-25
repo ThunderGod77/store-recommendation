@@ -38,3 +38,27 @@ func AddC(name string, internalId string, pincode int, email string) (string, er
 
 	return fmt.Sprintf("%v", result), nil
 }
+
+func AddRelation(cId1, cId2, rType, date string) error {
+
+	session := global.Driver.NewSession(neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
+	defer session.Close()
+
+	_, err := session.WriteTransaction(func(transaction neo4j.Transaction) (interface{}, error) {
+		result, err := transaction.Run(
+			"MATCH (c:Customer{internal_id:$cId1}),(d:Customer{internal_id:$cId2}) "+
+				"CREATE (c)-[:Relation{date:$date,type:$type}]->(d) ",
+			map[string]interface{}{"cId1": cId1, "cId2": cId2, "rType": rType, "date": date})
+
+		if err != nil {
+			return nil, err
+		}
+		return nil, result.Err()
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
