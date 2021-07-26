@@ -13,7 +13,7 @@ func AddP(name string, sku string, id string, price float32, description string,
 	result, err := session.WriteTransaction(func(transaction neo4j.Transaction) (interface{}, error) {
 		result, err := transaction.Run(
 			"MERGE (b:Brand{name:$brand}) "+
-				"MERGE (c:category{name:$category}) "+
+				"MERGE (c:Category{name:$category}) "+
 				"CREATE (a:Product)-[:By]->(b),(a)-[:Belongs]->(c) "+
 				"SET "+
 				"a.name = $name,"+

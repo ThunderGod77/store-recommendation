@@ -31,7 +31,7 @@ func main() {
 			log.Println(err)
 		}
 	})
-	a.HandleFunc("/load-data", data.LoadTestData)
+	a.HandleFunc("/load-data", data.LoadTestData).Methods("GET")
 
 	p := a.PathPrefix("/product").Subrouter()
 	c := a.PathPrefix("/customer").Subrouter()

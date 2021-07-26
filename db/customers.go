@@ -62,3 +62,4 @@ func AddRelation(cId1, cId2, rType, date string) error {
 
 	return nil
 }
+
