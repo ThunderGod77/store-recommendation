@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"graphApp/db"
 	"graphApp/global"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -86,6 +87,11 @@ func addTestCustomers() error {
 	var data []customerData
 
 	for _, line := range csvLines {
+
+
+		if err != nil {
+			return err
+		}
 		cd := customerData{
 			name:       line[0],
 			internalId: line[1],
@@ -108,7 +114,7 @@ func addTestCustomers() error {
 	q := "MATCH "
 
 	for _, val := range data {
-		valQ := fmt.Sprintf("(%s:Area{pincode:%s}) ,", val.internalId, val.pincode)
+		valQ := fmt.Sprintf("(%s:Area{pincode:'%s'}) ,", val.internalId, val.pincode)
 		q = q + valQ
 	}
 	q = q[:len(q)-1]
@@ -119,8 +125,10 @@ func addTestCustomers() error {
 		q = q + valQ
 	}
 	q = q[:len(q)-1]
+	log.Println(q)
 
 	err = db.RunQuery(q)
+
 	if err != nil {
 		return err
 	}
@@ -129,7 +137,6 @@ func addTestCustomers() error {
 }
 
 func addTestProducts() error {
-
 	csvFile, err := os.Open("./product.csv")
 	if err != nil {
 		fmt.Println(err)
