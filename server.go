@@ -13,12 +13,17 @@ import (
 
 func main() {
 
+	//initializing the neo4j driver
 	db.Init()
 	defer global.Driver.Close()
+
+
 
 	r := mux.NewRouter()
 	a := r.PathPrefix("/api").Subrouter()
 	a.StrictSlash(true)
+
+	// setting up test route
 	a.HandleFunc("", func(w http.ResponseWriter, r *http.Request) {
 
 		w.Header().Set("Content-Type", "application/json")
@@ -31,12 +36,18 @@ func main() {
 			log.Println(err)
 		}
 	})
+
+	//route to reset database and load test data
 	a.HandleFunc("/load-data", data.LoadTestData).Methods("GET")
 
+	//subrouter related to product
 	p := a.PathPrefix("/product").Subrouter()
+	////subrouter related to customer
 	c := a.PathPrefix("/customer").Subrouter()
 	p.StrictSlash(true)
 	c.StrictSlash(true)
+
+	//registers all the routes
 	routes.ProductRoutes(p)
 	routes.CustomerRoutes(c)
 
@@ -48,27 +59,3 @@ func main() {
 
 }
 
-//func helloWorld(uri, username, password string) (string, error) {
-//	session := driver.NewSession(neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
-//	defer session.Close()
-//
-//	greeting, err := session.WriteTransaction(func(transaction neo4j.Transaction) (interface{}, error) {
-//		result, err := transaction.Run(
-//			"CREATE (a:Greeting) SET a.message = $message RETURN a.message + ', from node ' + id(a)",
-//			map[string]interface{}{"message": "hello, world"})
-//		if err != nil {
-//			return nil, err
-//		}
-//
-//		if result.Next() {
-//			return result.Record().Values[0], nil
-//		}
-//
-//		return nil, result.Err()
-//	})
-//	if err != nil {
-//		return "", err
-//	}
-//
-//	return greeting.(string), nil
-//}

@@ -6,6 +6,7 @@ import (
 	"graphApp/global"
 )
 
+//to add new customers
 func AddC(name string, internalId string, pincode int, email string) (string, error) {
 	session := global.Driver.NewSession(neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
 	defer session.Close()
@@ -39,6 +40,7 @@ func AddC(name string, internalId string, pincode int, email string) (string, er
 	return fmt.Sprintf("%v", result), nil
 }
 
+//to add relationships between two customers
 func AddRelation(cId1, cId2, rType, date string) error {
 
 	session := global.Driver.NewSession(neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})

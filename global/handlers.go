@@ -24,10 +24,11 @@ func (we WebError) ReturnError(w http.ResponseWriter) {
 
 }
 
+// to handle and return errors to client
 func NewWebError(w http.ResponseWriter, err error, statusCode int) {
 	we := WebError{
 		Msg:        err.Error(),
-		Err:        false,
+		Err:        true,
 		statusCode: statusCode,
 	}
 	we.ReturnError(w)

@@ -68,6 +68,10 @@ func LoadTestData(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Added Test Data!"))
+
 }
 
 func addTestCustomers() error {
@@ -87,7 +91,6 @@ func addTestCustomers() error {
 	var data []customerData
 
 	for _, line := range csvLines {
-
 
 		if err != nil {
 			return err

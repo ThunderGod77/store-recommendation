@@ -15,7 +15,7 @@ type vP struct {
 	Date       string `json:"date"`
 }
 
-func CPRelation(actionString string, actionFunc func(string, string, string) error) func(http.ResponseWriter, *http.Request) {
+func cpRelation(actionString string, actionFunc func(string, string, string) error) func(http.ResponseWriter, *http.Request) {
 
 	cpr := func(w http.ResponseWriter, r *http.Request) {
 		body, err := ioutil.ReadAll(r.Body)
@@ -53,6 +53,6 @@ func CPRelation(actionString string, actionFunc func(string, string, string) err
 	return cpr
 }
 
-var ViewProduct = CPRelation("view", db.ViewP)
-var OrderProduct = CPRelation("order", db.OrderP)
-var WishlistProduct = CPRelation("wishlist", db.WishlistP)
+var ViewProduct = cpRelation("view", db.ViewP)
+var OrderProduct = cpRelation("order", db.OrderP)
+var WishlistProduct = cpRelation("wishlist", db.WishlistP)

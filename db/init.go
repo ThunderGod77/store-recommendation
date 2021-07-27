@@ -7,6 +7,7 @@ import (
 
 var err error
 
+//to initialize the driver variable
 func Init() {
 	global.Driver, err = neo4j.NewDriver("neo4j://localhost:7687", neo4j.BasicAuth("neo4j", "recommend", ""))
 	if err != nil {
@@ -15,7 +16,8 @@ func Init() {
 
 }
 
-func DeleteAll()error{
+//to reset the database(delete all nodes and relationships)
+func DeleteAll() error {
 	session := global.Driver.NewSession(neo4j.SessionConfig{AccessMode: neo4j.AccessModeWrite})
 	defer session.Close()
 

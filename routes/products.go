@@ -6,6 +6,12 @@ import (
 )
 
 func ProductRoutes(p *mux.Router) {
+	// route - to add a product
 	p.HandleFunc("/", controllers.AddProduct).Methods("POST")
+	// route - to delete a product
 	p.HandleFunc("/{id}", controllers.DeleteProduct).Methods("DELETE")
+	//route - to add a brand
+	p.HandleFunc("/brand", controllers.AddBrand).Methods("POST")
+	//route - to add product category
+	p.HandleFunc("/category", controllers.AddCategory).Methods("POST")
 }
