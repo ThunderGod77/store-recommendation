@@ -14,4 +14,6 @@ func ProductRoutes(p *mux.Router) {
 	p.HandleFunc("/brand", controllers.AddBrand).Methods("POST")
 	//route - to add product category
 	p.HandleFunc("/category", controllers.AddCategory).Methods("POST")
+	//route -  to get recommendations
+	p.HandleFunc("/recommend/{pId}", controllers.Recommend).Methods("GET")
 }

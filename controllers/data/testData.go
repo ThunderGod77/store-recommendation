@@ -5,10 +5,8 @@ import (
 	"fmt"
 	"graphApp/db"
 	"graphApp/global"
-	"log"
 	"net/http"
 	"os"
-	"strconv"
 )
 
 type customerData struct {
@@ -22,7 +20,7 @@ type productData struct {
 	name        string
 	sku         string
 	internalId  string
-	price       float64
+	price       string
 	description string
 	brand       string
 	category    string
@@ -128,7 +126,7 @@ func addTestCustomers() error {
 		q = q + valQ
 	}
 	q = q[:len(q)-1]
-	log.Println(q)
+
 
 	err = db.RunQuery(q)
 
@@ -157,16 +155,11 @@ func addTestProducts() error {
 	c := map[string]bool{}
 	for _, line := range csvLines {
 
-		prcInt, err := strconv.ParseFloat(line[3], 32)
-		if err != nil {
-			return err
-		}
-
 		cd := productData{
 			name:        line[0],
 			sku:         line[1],
 			internalId:  line[2],
-			price:       prcInt,
+			price:       line[3],
 			description: line[4],
 			brand:       line[5],
 			category:    line[6],
@@ -208,7 +201,7 @@ func addTestProducts() error {
 	q = q + "CREATE "
 
 	for _, val := range data {
-		valQ := fmt.Sprintf("(%s)<-[:By]-(:Product{name:'%s',email:'%s',internal_id:'%s',price:%v,description:'%s'})-[:Belongs]->(%s) ,", fmt.Sprintf("%s%d", val.internalId, 1), val.name, val.sku, val.internalId, val.price, val.description, fmt.Sprintf("%s%d", val.internalId, 2))
+		valQ := fmt.Sprintf("(%s)<-[:By]-(:Product{name:'%s',sku:'%s',internal_id:'%s',price:'%s',description:'%s'})-[:Belongs]->(%s) ,", fmt.Sprintf("%s%d", val.internalId, 1), val.name, val.sku, val.internalId, val.price, val.description, fmt.Sprintf("%s%d", val.internalId, 2))
 		q = q + valQ
 	}
 	q = q[:len(q)-1]
